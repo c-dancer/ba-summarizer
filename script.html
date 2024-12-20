@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Breach Alert Summary Helper</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+		<!-- CSS Stuff. -->
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            flex-direction: column;
+            background-color: #110e0e; 
+            font-family: 'Montserrat', sans-serif; 
+            color: #ffffff;
+        }
+        .form-container {
+            background: #242121; 
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            width: 500px; 
+        }
+        h1 {
+            color: #cc0033;
+        }
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin: 10px 0;
+            flex-direction: column;
+        }
+        .form-group label {
+            width: 100%;
+            text-align: left;
+            margin-bottom: 5px;
+            color: #ffffff;
+        }
+        .form-group input,
+        .form-group button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            transition: box-shadow 0.3s ease-in-out;
+            background-color: #110e0e; 
+            color: #ffffff; 
+            font-family: 'Montserrat', sans-serif; 
+        }
+        .form-group input:focus {
+            border-color: #cc0033;
+            outline: none;
+            background-color: #cc0033;
+        }
+        .form-group input:hover {
+            box-shadow: 0 0 8px rgba(204, 0, 51, 0.8);
+        }
+        button {
+            background-color: #cc0033;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #99002a;
+        }
+        .checkbox-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        .checkbox-container label {
+            margin-left: 5px;
+            color: #ffffff; 
+            font-family: 'Montserrat', sans-serif; 
+        }
+        input[type="radio"] {
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 2px solid #cc0033;
+            outline: none;
+            cursor: pointer;
+            margin-right: 5px;
+            transition: background 0.3s ease-in-out;
+        }
+        input[type="radio"]:checked {
+            background-color: #cc0033;
+        }
+        #output {
+            height: 200px; 
+            width: 100%; 
+            overflow-y: auto; 
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            background-color: #1e1e1e; 
+            color: #ffffff; 
+            box-sizing: border-box;
+            font-family: 'Montserrat', sans-serif; 
+        }
+		.footer {
+			text-align: left;
+			font-size: 0.65em;
+			font-style: italic;
+			margin-top: 10px;
+			color: #ffffff; 
+			width: 100%;
+		}
+
+    </style>
+</head>
+<body>
+    <h1>Breach Alert Summary Helper</h1>
+	<!-- Form creation, then sets up the input fields. -->
+    <div class="form-container">
+        <form id="customForm">
+            <div class="form-group">
+                <label for="orgName">Organization Name:</label>
+                <input type="text" id="orgName" name="orgName" required placeholder="Totally Real Car Makers, Inc." oninput="fetchDetails()">
+            </div>
+            <div class="form-group">
+                <label for="orgType">Organization Type:</label>
+                <input type="text" id="orgType" name="orgType" required placeholder="automotive manufacturing">
+            </div>
+            <div class="form-group">
+                <label for="location">Location:</label>
+                <input type="text" id="location" name="location" required placeholder="Michigan, U.S.">
+            </div>
+            <div class="form-group">
+                <label for="website">Website:</label>
+                <input type="url" id="website" name="website" required placeholder="wemakecarshere.com">
+            </div>
+            <div class="form-group">
+                <label for="name">Actor Name:</label>
+                <input type="text" id="name" name="name" required placeholder="We R Hax0rs">
+            </div>
+            <div class="form-group">
+                <label for="date">Date:</label>
+                <input type="date" id="date" name="date" required>
+            </div>
+			<style> 
+			<!-- Awfully placed CSS for the yes/no option. -->
+			.checkbox-container label { 
+				margin-left: 5px; 
+				margin-right: 20px; /* Adjust the right margin to space them out more */ 
+				color: #ffffff; 
+				font-family: 'Montserrat', sans-serif; } 
+</style>
+			<div class="form-group">
+				<label for="checkboxes">Provided Proof?</label>
+				<div class="checkbox-container">
+				<input type="radio" id="yesOption" name="options" value="Yes"><label for="yesOption">Yes</label>
+				<input type="radio" id="noOption" name="options" value="No"><label for="noOption">No</label>
+			</div>
+</div>
+            <button type="button" onclick="generateParagraph()">Summarize Me</button>
+        </form>
+        <div id="output"></div>
+	<div class="footer">Created by Chase Dancer</div>
+    </div>
+    <script>
+        function generateParagraph() {
+            // Gets inputs from the user for form.
+            const name = document.getElementById('name').value;
+            const dateInput = document.getElementById('date').value;
+            const location = document.getElementById('location').value;
+            const orgType = document.getElementById('orgType').value;
+            const orgName = document.getElementById('orgName').value;
+            const website = document.getElementById('website').value;
+
+            // Calendar stuff.
+            const [year, month, day] = dateInput.split('-');
+            const formattedDate = `${['Jan.', 'Feb.', 'Mar.', 'Apr.', 'May', 'Jun.', 'Jul.', 'Aug.', 'Sep.', 'Oct.', 'Nov.', 'Dec.'][parseInt(month, 10) - 1]} ${parseInt(day, 10)}, ${year}`;
+
+            const checkboxes = document.querySelectorAll('input[name="options"]:checked');
+            const optionsSelected = Array.from(checkboxes).map(cb => cb.value);
+
+            // Makes the paragraph.
+            let paragraph = `On ${formattedDate}, the operator or operators behind the ((${name})) ransomware-as-a-service (RaaS) affiliate program claimed the compromise of the ${location}-based ${orgType} company ${orgName} at the ${website} website. `;
+
+            // Adds text depending on the yes or no answer.
+            if (optionsSelected.includes("No")) {
+                paragraph += "The blog operator or operators did not supply proof of the claim at the time of this report.";
+            }
+            if (optionsSelected.includes("Yes")) {
+                paragraph += " The blog operator or operators shared sample data allegedly infiltrated from the victim's network as proof of the claim.";
+            }
+
+            // Displays paragraph.
+            const output = document.getElementById('output');
+            output.innerText = paragraph;
+        }
+    </script>
+</body>
+</html>
